@@ -4,6 +4,7 @@ import numpy as np
 import tqdm
 import torch
 import os
+import matplotlib.pyplot as plt
 
 NUM_ENVS = 10
 STEPS = 3000
