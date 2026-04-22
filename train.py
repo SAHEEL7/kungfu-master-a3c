@@ -28,14 +28,28 @@ batch = EnvBatch(NUM_ENVS)
 states = batch.reset()
 episode_rewards = []
 
+total_reward = 0
+
 for i in tqdm.trange(STEPS):
     actions = agent.act(states)
     next_states, rewards, dones, _ = batch.step(actions)
 
     rewards *= 0.01
+    total_reward += rewards.mean()
+
     agent.step(states, actions, rewards, next_states, dones)
     states = next_states
 
-os.makedirs("checkpoints", exist_ok=True)
-torch.save(agent.network.state_dict(), "checkpoints/model.pth")
-print("Model saved!")
+    if i % 100 == 0:
+        episode_rewards.append(total_reward)
+        total_reward = 0
+
+os.makedirs("results/plots", exist_ok=True)
+
+plt.plot(episode_rewards)
+plt.title("Training Reward Over Time")
+plt.xlabel("Iterations (x100)")
+plt.ylabel("Reward")
+plt.savefig("results/plots/reward_plot.png")
+
+print("📈 Reward graph saved!")
