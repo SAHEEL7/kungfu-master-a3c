@@ -26,6 +26,7 @@ agent = Agent(env.action_space.n)
 
 batch = EnvBatch(NUM_ENVS)
 states = batch.reset()
+episode_rewards = []
 
 for i in tqdm.trange(STEPS):
     actions = agent.act(states)
